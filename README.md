@@ -5,7 +5,7 @@ Simple prometheus exporter for k6 metrics exposed by [k6-rest-api](https://k6.io
 Compatible just for HTTP protocol Metrics
 ```
 
-## Run k6 exporter with Docker
+## Run k6_exporter with Docker
 ``` 
 Run DEMO using command `docker-compose up -d`
 It will start simple json-server, K6 test, k6_exporter, prometheus and grafana
@@ -46,7 +46,6 @@ Watch full example in `docker-compose.yml` file
     static_configs:
       - targets: ['k6_exporter:9091']
 ```
-
 
 
 ## Exporter Configurations
