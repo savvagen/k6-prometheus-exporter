@@ -1,20 +1,28 @@
 # k6_prometheus_exporter
 Simple prometheus exporter for k6 metrics exposed by [k6-rest-api](https://k6.io/docs/misc/k6-rest-api/)
 
+```
+Compatible just for HTTP protocol Metrics
+```
+
 ## Run k6 exporter with Docker
+``` 
+Run DEMO using command `docker-compose up -d`
+It will start simple json-server, K6 test, k6_exporter, prometheus and grafana
+```
+
+#### Requirements:
+* Need to K6 test with server exposed on port: `6565`
+
 
 1. With commandline:
 ``` 
 docker run -p 9091:9091 --network host -e "METRICS_PORT=9091" -e "COLLECT_INTERVAL=10" -e "K6_SERVER=http://127.0.0.1:6565" -i savvagenchevskiy/k6-exporter:latest
 ```
-2. Run with `docker-compose`:
+2. Run k6_exporter and prometheus with `docker-compose`:
 ```
-
   k6_exporter:
     image: savvagenchevskiy/k6-exporter:latest
-    build:
-      context: .
-      dockerfile: Dockerfile
     container_name: k6_exporter
     networks: 
       - k6
@@ -27,25 +35,18 @@ docker run -p 9091:9091 --network host -e "METRICS_PORT=9091" -e "COLLECT_INTERV
       - K6_SERVER=http://k6:6565
     depends_on: 
       - k6
-  
-  prometheus:
-    image: prom/prometheus:v2.22.0
-    container_name: prometheus
-    restart: always
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--web.console.libraries=/etc/prometheus/console_libraries'
-      - '--web.console.templates=/etc/prometheus/consoles'
-      - '--storage.tsdb.retention.time=30d'
-    volumes:
-      - ./metrics/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-    ports:
-      - 9090:9090
-    networks: 
-      - k6
-
 ```
+Watch full example in `docker-compose.yml` file
+
+## Configure Prometheus
+`proimetheus.yml` config:
+``` 
+  - job_name: k6_exporter
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['k6_exporter:9091']
+```
+
 
 
 ## Exporter Configurations
@@ -63,7 +64,22 @@ Name | Description | Default
 ## Exported Metrics
 
 ### Statistics:
-Name | Type | Description | Labels
-----|----|----|----|
-`nginxexporter_build_info` | Gauge | Shows the exporter build information. | `gitCommit`, `version` |
-`nginx_up` | Gauge | Shows the status of the last metric scrape: `1` for a successful scrape and `0` for a failed one | [] |
+Name | Description
+----|----|
+`k6_exporter_vus` | Current number of active virtual users (from K6 `/api/v1/status`) |
+`k6_exporter_http_reqs` | How many HTTP requests has k6 generated, in total |
+`k6_exporter_data_received` | The amount of received data. Trend (max, min, avg, med, p90, p95) |
+`k6_exporter_data_sent` | The amount of data sent. Trend (max, min, avg, med, p90, p95) |
+`k6_exporter_iterations` | The aggregate number of times the VUs in the test have executed the JS script |
+`k6_exporter_checks` | The rate of successful checks |
+`k6_exporter_http_req_failed` | percentage - rate of failed http requests |
+`k6_exporter_vus_max` | Max possible number of virtual users (VU resources are pre-allocated, to ensure performance will not be affected when scaling up the load level)|
+`k6_exporter_group_duration` | K6-group duration trend (max, min, avg, med, p90, p95) |
+`k6_exporter_http_req_connecting` | Time spent establishing TCP connection to the remote host (max, min, avg, med, p90, p95) |
+`k6_exporter_http_req_duration` | Total time for the request. It's equal to http_req_sending + http_req_waiting + http_req_receiving (i.e. how long did the remote server take to process the request and respond, without the initial DNS lookup/connection times). (resp. time) trend (max, min, avg, med, p90, p95) |
+`k6_exporter_http_req_sending` | Time spent sending data to the remote host. (max, min, avg, med, p90, p95) |
+`k6_exporter_http_req_tls_handshaking` | Time spent handshaking TLS session with remote host (max, min, avg, med, p90, p95) |
+`k6_exporter_http_req_waiting` | Time spent waiting for response from remote host (a.k.a. \"time to first byte\", or \"TTFB\").  (max, min, avg, med, p90, p95) |
+`k6_exporter_http_req_blocked` | Time spent blocked (waiting for a free TCP connection slot) before initiating the request. (max, min, avg, med, p90, p95) |
+`k6_exporter_checks_passes` | Passed checks listed by k6-groups |
+`k6_exporter_checks_fails` | Failed checks listed by k6-groups |
