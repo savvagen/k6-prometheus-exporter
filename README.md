@@ -5,11 +5,18 @@ Simple prometheus exporter for k6 metrics exposed by [k6-rest-api](https://k6.io
 Compatible just for HTTP protocol Metrics
 ```
 
+Metrics are available by path: `http://<host>:9091/metrics`
+
 ## Run k6_exporter with Docker
-``` 
+
 Run DEMO using command `docker-compose up -d`
+``` 
 It will start simple json-server, K6 test, k6_exporter, prometheus and grafana
 ```
+Watch available services:
+* k6 server: `http://localhost:6565/v1/metrics`
+* k6_node exporter metrics: `http://localhost:9091/metrics`
+* Check if metrics are available on Prometheus: `http://localhost:9090/graph?g0.range_input=1h&g0.expr=k6_exporter_http_reqs&g0.tab=1`
 
 #### Requirements:
 * Need to K6 test with server exposed on port: `6565`
