@@ -1,0 +1,30 @@
+{
+  "name": "k6_exporter",
+  "version": "1.0.0",
+  "description": "Simple Prometheus exporter for K6 Performance Testing tool metrics",
+  "main": "main.ts",
+  "author": "Savva Genchevskiy",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "format": "prettier --write \"src/**/*.ts\"",
+    "build": "rm -rf dist && tsc -p tsconfig.json",
+    "start": "ts-node -r tsconfig-paths/register --files src/main.ts",
+    "start:dev": "ts-node-dev --files --inspect=127.0.0.1:9229 src/main.ts"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/node": "^16.6.1",
+    "k6": "^0.0.0",
+    "ts-loader": "^9.2.5",
+    "ts-node": "^10.2.0",
+    "ts-node-dev": "^1.1.8",
+    "tsconfig-paths": "^3.10.1",
+    "typescript": "^4.3.5"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "express": "^4.17.1",
+    "prom-client": "^13.2.0"
+  }
+}
