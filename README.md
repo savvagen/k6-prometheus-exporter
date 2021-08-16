@@ -1,11 +1,9 @@
 # k6_prometheus_exporter
+Inspired by: https://github.com/teamzerolabs/covid_exporter ([Medium Article](https://medium.com/teamzerolabs/write-aprometheus-api-exporter-in-record-time-7518ee22f238))
+
+### Description
 Simple prometheus exporter for k6 metrics exposed by [k6-rest-api](https://k6.io/docs/misc/k6-rest-api/)
-
-```
-Compatible just for HTTP protocol Metrics
-```
-
-Metrics are available by path: `http://<host>:9091/metrics`
+After running the k6_exporter metrics will available by path: `http://<host>:9091/metrics`
 
 ## Run k6_exporter with Docker
 
